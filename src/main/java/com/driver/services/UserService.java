@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -25,17 +26,24 @@ public class UserService {
     public Integer addUser(User user){
 
         //Jut simply add the user to the Db and return the userId returned by the repository
-        return null;
+        User user1=userRepository.save(user);
+        return user1.getId();
     }
-
     public Integer getAvailableCountOfWebSeriesViewable(Integer userId){
 
         //Return the count of all webSeries that a user can watch based on his ageLimit and subscriptionType
         //Hint: Take out all the Webseries from the WebRepository
-
-
-        return null;
+        User user1=userRepository.findById(userId).get();
+        List<WebSeries>seriesList=webSeriesRepository.findBySubscriptionType(user1.getSubscription().getSubscriptionType());
+        int  cnt=0;
+        for(WebSeries ws:seriesList)
+        {
+            if(ws.getAgeLimit()<=user1.getAge()) cnt++;
+        }
+        return cnt;
     }
+/* <-------------------------------------------DONE---------------------------------------------->*/
+
 
 
 }
